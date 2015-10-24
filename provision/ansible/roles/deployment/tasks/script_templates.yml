@@ -1,0 +1,9 @@
+---
+
+- name: Added script app Deployment
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  with_items: deployment.script_templates
+  when: deployment.script_templates is defined

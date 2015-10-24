@@ -1,0 +1,36 @@
+---
+
+- name: validation with python 2.7
+  stat:
+    path: "{{ _file_bin_python }}"
+  register: bin_python
+  ignore_errors: yes
+- debug: bin_python.stat.exists
+
+- name: Ensure dependencies are installed
+  sudo: yes
+  apt: name="{{ item }}" state=present
+  with_items: _python_dependences
+
+- name: Configure, compile and install Python
+  sudo: yes
+  shell: "{{ item }}"
+  args:
+    chdir: "{{ _python_path_version }}"
+  with_items: _python_executes
+  register: execute_python
+  when: not bin_python.stat.exists
+
+- name: Create Link Symbolic
+  sudo: yes
+  file: "src={{ item.src }}
+        dest={{ item.dest }}
+        state={{ item.state }}"
+  with_items: _python_create_links
+  when: execute_python|success
+
+- name: Update Shell
+  shell: "{{ _python_configure_command.update_shell }}"
+  args:
+    executable: /bin/bash
+  when: execute_python|success

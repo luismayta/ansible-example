@@ -1,0 +1,14 @@
+---
+
+- name: Ensure user has access to database
+  sudo: yes
+  sudo_user: postgres
+  postgresql_user:
+    db: "{{ item.db }}"
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    priv: '{{ item.priv }}'
+    role_attr_flags: '{{ item.role_attr_flags }}'
+  with_items: postgresql_users
+  notify:
+    - restart postgresql

@@ -1,0 +1,6 @@
+---
+- name: Installs nginx web server
+  sudo: yes
+  apt: pkg=nginx state=latest
+  notify:
+    - start nginx

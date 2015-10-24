@@ -1,0 +1,8 @@
+---
+
+- name: create files
+  file:
+    path: "{{ item.path }}"
+    state: "{{ item.state }}"
+  with_items: deployment.create_files
+  when: deployment.create_files is defined

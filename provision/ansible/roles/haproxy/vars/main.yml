@@ -1,0 +1,6 @@
+---
+
+# Variables Private haproxy
+
+_haproxy_dependences:
+  - software-properties-common

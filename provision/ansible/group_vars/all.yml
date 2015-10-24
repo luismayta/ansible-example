@@ -1,0 +1,56 @@
+---
+
+name_domain: "www.project.com"
+
+environment: "local"
+
+user_remote: luis
+user: vagrant
+app_port: 9000
+app_proxypass: "127.0.0.1:{{ app_port }}"
+app_name: "project"
+app_module: "{{ app_name }}.wsgi:application"
+app_name_path: "src"
+app_db_name: "project"
+app_dir_home: "/home/{{ user }}"
+apps_path: "{{ app_dir_home }}/{{ repository_name }}"
+app_dir: "{{ apps_path }}/{{ app_name_path }}"
+dir_logs_supervisor: "/var/log/supervisor"
+
+file:
+  package_json: "{{ apps_path }}/package.json"
+  gulpfile: "{{ apps_path }}/gulpfile.js"
+
+python_version: 2.7.9
+
+app:
+  name: "{{ app_name }}"
+  dir:
+    home: "/home/{{ user }}"
+    static: "{{ app_dir }}/staticfiles"
+    media: "{{ app_dir }}/media"
+    resources: "{{ apps_path }}/resources"
+  vars:
+    admin:
+      email: 'slovacus@gmail.com'
+    debug: 'False'
+    key:
+      secret: 'cj36%5xda7q5+ov)wz+(=vt7d81ka^xx!5%0)nx=z2i&)*5r^'
+    url:
+      postgresql: 'postgres://luis:luis@192.168.40.90:5432/{{ app_db_name }}'
+      media: ''
+      static: ''
+
+common_package_dependencies:
+  - "vim"
+
+# Git
+repository: "git@github.com:luismayta/ansible-example.git"
+repository_name: "{{ app_name }}"
+deployment_branch: "master"
+
+# Red
+remote_host: "127.0.0.1"
+app_version: "1.0.0"
+
+port_http: 80

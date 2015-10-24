@@ -1,0 +1,8 @@
+
+# - name: Save the hostname
+#   hostname:
+#       name: "{{ machine_hostname }}"
+
+# - name: Export environment variables
+#   shell: "export {{ item.key }}=\"{{ item.value }}\""
+#   with_dict: system_env_vars

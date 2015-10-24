@@ -1,0 +1,17 @@
+---
+
+- name: Install pip
+  sudo: yes
+  apt: pkg=python-pip state=latest
+  when: common_pip_packages is defined
+
+- name: Install or Upgrade pip
+  sudo: yes
+  pip: name=pip state=latest
+  when: common_pip_packages is defined
+
+- name: Install virtualenvwrapper via pip
+  sudo: yes
+  pip: name="{{ item.name }}" state="{{ item.state}}"
+  when: common_pip_packages is defined
+  with_items: common_pip_packages

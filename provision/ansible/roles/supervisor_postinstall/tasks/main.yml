@@ -1,0 +1,18 @@
+---
+
+- name: copy template
+  sudo: yes
+  template:
+    src: "{{ item.src }}"
+    dest: "/etc/supervisor/conf.d/{{ item.dest }}"
+  with_items: supervisor_templates
+
+- name: reloaded supervisor
+  sudo: yes
+  supervisorctl: name="{{ item.name }}" state="{{ item.state }}"
+  register: reloaded_supervisor
+  with_items: supervisor_app
+  tags:
+    - webserver
+    - wait
+    - deployment

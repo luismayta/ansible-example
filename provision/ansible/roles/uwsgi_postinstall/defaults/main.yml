@@ -1,0 +1,29 @@
+---
+# vars file for uwsgi
+
+uwsgi:
+  chdir: " path "
+  module: " module "
+  master: True
+  vacuum: True
+  max_requests: 20000
+  processes: 1
+  threads: 5
+  enable_threads: True
+  http: ":3097"
+  pidfile: "/var/run/uwsgi/uwsgi.pid"
+  # touch_reload: "/path/touch/reload"
+  daemonize: "/var/logs/uwsgi/uwsgi.log"
+  # harakiri: 30
+  # harakiri_verbose: True
+  log_x_forwarded_for: True
+  stats: "127.0.0.1:9000"
+  log_5xx: True
+  log_slow: 30000
+  # shared_socket: ":80"
+  buffer_size: "8096"
+  templates:
+    - src: "uwsgi.ini.j2"
+      dest: "{{ app.dir.home }}/uwsgi.ini"
+    - src: "uwsgi.sh.j2"
+      dest: "{{ app.dir.home }}/uwsgi.sh"

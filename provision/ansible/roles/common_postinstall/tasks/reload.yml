@@ -1,0 +1,11 @@
+---
+
+- name: Reload Services
+  sudo: yes
+  service: name="{{ item.name }}" state="{{ item.state }}" enabled=yes
+  with_items: services_states
+  when: services_states is defined
+  tags:
+    - webserver
+    - wait
+    - deployment

@@ -1,0 +1,16 @@
+---
+
+- name: Create path Dependences
+  sudo: yes
+  file: "path={{ item.path }} state={{ item.state }}"
+  with_items: _python_create_path_dependences
+
+- name: Downloads Dependences
+  sudo: yes
+  get_url: "url='{{ item.url }}' dest='{{ item.dest }}'"
+  with_items: _python_downloads
+
+- name: Unpacks
+  sudo: yes
+  unarchive: "src='{{ item.file }}' dest='{{ item.dest }}' copy=no"
+  with_items: _python_unpacks

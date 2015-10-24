@@ -1,0 +1,128 @@
+---
+
+common_package_dependencies:
+  - "build-essential"
+  - "curl"
+  - "zip"
+  - "rsync"
+  - "wget"
+  - "openssl"
+  - "libssl-dev"
+  - "libpq-dev"
+  - "libjpeg-dev"
+  - "libpcre3" # uwsgi
+  - "libpcre3-dev" #uwsgi
+  - "zlib1g-dev"
+  - "libpng12-dev"
+  - "bzip2"
+
+common_dependencies:
+  - name: "python2.7-dev"
+    version: ""
+  - name: "python-dev"
+    version: ""
+  - name: "python-pip"
+  - name: "libpq-dev"
+  - name: "git"
+  - name: "python-virtualenv"
+  - name: "python-setuptools"
+  - name: "python-software-properties"
+
+common_pip_packages:
+  - name: "virtualenvwrapper"
+    state: "latest"
+
+# Deployment
+
+virtualenv: "{{ app.name }}"
+virtualenvs_path: "/home/{{ user }}/.virtualenvs"
+virtualenv_path: "{{ virtualenvs_path }}/{{ virtualenv }}"
+virtualenv_file_activate: "{{ virtualenv_path }}/bin/activate"
+virtualenv_file_postactivate: "{{ virtualenv_path }}/bin/postactivate"
+
+
+# Create Dependencies Files
+
+common_create_files:
+  - path: "{{ dir_logs_supervisor }}"
+    state: "directory"
+    owner: "root"
+  - path: "{{ uwsgi_dir.run }}"
+    state: "directory"
+    owner: "{{ user }}"
+
+
+# Supervisor Templates
+
+supervisor_templates:
+  - src: "uwsgi.conf.j2"
+    dest: "uwsgi.conf"
+
+
+supervisor_app:
+  - name: "uwsgi"
+    state: "restarted"
+
+
+# Services
+services_states:
+  - name: "nginx"
+    state: "reloaded"
+
+
+uwsgi_dir:
+  run: "{{ app_dir_home }}/run"
+
+
+uwsgi:
+  project: "{{ app_name }}"
+  base: "{{ app_dir_home }}"
+  chdir: "{{ app_dir }}"
+  home: "{{ virtualenv_path }}"
+  pythonpath: "{{ app_dir }}"
+  socket: "{{ app_proxypass }}"
+  module: "{{ app_module }}"
+  uid: "{{ user }}"
+  gid: "{{ user }}"
+  master: true
+  vacuum: true
+  virtualenv: "{{ virtualenv_path }}"
+  max_requests: 20000
+  processes: 1
+  threads: 2
+  enable_threads: true
+  # http: ":3097"
+  pidfile: "{{ uwsgi_dir.run }}/{{ app_name }}.pid"
+  # touch_reload: "/path/touch/reload"
+  # daemonize: "{{ uwsgi_dir.run }}/{{ app_name }}.log"
+  # harakiri: 30
+  # harakiri_verbose: True
+  log_x_forwarded_for: true
+  # stats: "127.0.0.1:9000"
+  log_5xx: true
+  log_slow: 30000
+  # shared_socket: ":80"
+  buffer_size: "8096"
+  templates:
+    - src: "uwsgi.ini.j2"
+      dest: "{{ app.dir.home }}/{{ app_name }}.ini"
+    - src: "uwsgi.sh.j2"
+      dest: "{{ app.dir.home }}/uwsgi.sh"
+
+# Nginx
+nginx:
+  port: "{{ port_http }}"
+  server_name: "127.0.0.1"
+  proxy_pass: "{{ app_proxypass }}"
+  templates:
+    - src: "default.conf.j2"
+      dest: "/etc/nginx/sites-available/default"
+    - src: "default.conf.j2"
+      dest: "/etc/nginx/sites-enabled/default"
+
+# Deployment
+deployment:
+  script_templates:
+    - src: "postactivate.j2"
+      dest: "{{ virtualenv_file_postactivate }}"
+      mode: "0755"

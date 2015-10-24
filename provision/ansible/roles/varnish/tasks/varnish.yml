@@ -1,0 +1,23 @@
+---
+
+- name: Added Apt Key Varnish
+  sudo: yes
+  apt_key: url="{{ _varnish_url.key }}" state=present
+  register: apt_key_varnish
+  when: dependences_varnish|success
+
+- name: source copy template
+  sudo: yes
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items: _varnish_source_templates
+  register: source_copy_template
+  when: apt_key_varnish|success
+  # notify:
+    # update apt
+
+- name: Install Varnish
+  sudo: yes
+  apt: name="{{ _varnish_package_name }}" state=present update_cache=yes
+  when: source_copy_template|success

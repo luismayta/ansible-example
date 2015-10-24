@@ -1,0 +1,14 @@
+---
+
+galaxy_info:
+  author: Luis Mayta
+  description: Installs Load Balancer HA-Proxy on Debian
+  company:
+  license: license (Mit)
+  min_ansible_version: 1.7
+  platforms:
+  categories:
+  - development
+  - web
+
+dependencies: []

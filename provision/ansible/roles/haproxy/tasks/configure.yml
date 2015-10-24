@@ -1,0 +1,21 @@
+---
+- name: Installs dependences
+  when: ansible_os_family == 'Debian'
+  sudo: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items: _haproxy_dependences
+  tags:
+    - haproxy
+
+- name: Add haproxy official APT repository
+  when: ansible_os_family == 'Debian'
+  sudo: yes
+  apt_repository:
+    repo: "{{ item }}"
+  with_items: haproxy_repos
+  tags:
+    - apt-repository

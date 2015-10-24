@@ -1,0 +1,15 @@
+---
+
+- name: Creates cronjob
+  cron: minute="{{ item.value.minute }}"
+        hour="{{ item.value.hour }}"
+        weekday="{{ item.value.weekday }}"
+        name="{{ item.value.name }}"
+        cron_file="{{ item.value.cron_file }}"
+        user="{{ item.value.user }}"
+        job="{{ item.value.job }}"
+  with_dict: deployment.cronjobs | default({})
+  when: deployment is defined
+  when: deployment.cronjobs is defined
+  tags:
+    - cronjobs

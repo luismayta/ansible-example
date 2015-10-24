@@ -1,0 +1,44 @@
+---
+# Ansible playbook for a proyect
+#
+# @author luismayta (2015).
+
+- name: Common stuff for all the server
+  hosts: all
+  sudo: yes
+  gather_facts: yes
+  roles:
+    - common
+  tags:
+    - all
+    - common
+
+- name: execute roles dependences
+  hosts: webservers
+  gather_facts: yes
+  roles:
+    - { role: nodejs, when: "user == 'vagrant'" }
+    - nginx
+    - supervisor
+
+- name: Install PostgreSQL
+  hosts: dbservers
+  gather_facts: yes
+  sudo: yes
+  roles:
+    - postgresql
+  tags:
+    - install
+    - mysql
+    - databases
+
+- name: Install HaProxy
+  hosts: lbservers
+  gather_facts: yes
+  sudo: yes
+  roles:
+    - haproxy
+  tags:
+    - install
+    - haproxy
+    - lbserver

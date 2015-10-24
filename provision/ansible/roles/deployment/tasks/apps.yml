@@ -1,0 +1,80 @@
+---
+
+- shell: which npm
+  args:
+    chdir: "{{ apps_path }}"
+  register: npm_command
+  ignore_errors: True
+
+- name: Check repo was cloned
+  stat:
+    path: "{{ apps_path }}"
+  register: repo_cloned
+  tags:
+    - apps
+    - deploy
+    - update
+    - check
+
+- name: Check exist package.json
+  stat:
+    path: "{{ file.package_json }}"
+  register: exist_package_json
+  tags:
+    - apps
+    - deploy
+    - update
+    - check
+- debug: var=exist_package_json.stat.exists
+
+- name: Check exist gulpfile
+  stat:
+    path: "{{ file.gulpfile }}"
+  register: exist_gulpfile
+  tags:
+    - apps
+    - deploy
+    - update
+    - check
+
+- name: Update Apps
+  sudo_user: "{{ user }}"
+  git:
+    repo: "{{ repository }}"
+    dest: "{{ apps_path }}"
+    version: "{{ deployment_branch }}"
+    accept_hostkey: yes
+  register: git_clone_repo
+  when: repo_cloned.stat.isdir is not defined
+  tags:
+    - apps
+    - deploy
+    - update
+
+- name: Install Npm Module
+  sudo_user: "{{ user }}"
+  npm: path={{ apps_path }} executable=/usr/local/bin/npm state=present
+  register: Install_Npm_Module
+  when: repo_cloned.stat.isdir is not defined
+  when: "environment != 'production'"
+  when: npm_command|success
+  when: exist_package_json.stat.exists == True
+  tags:
+    - apps
+    - deploy
+    - update
+
+- name: Install Gulp
+  sudo: yes
+  npm: name={{ item }} executable=/usr/local/bin/npm state=present global=yes
+  with_items:
+    - gulp
+    - browserify
+  register: Install_Gulp
+  when: "environment != 'production'"
+  when: exist_gulpfile.stat.exists == True
+  when: npm_command|success
+  tags:
+    - apps
+    - deploy
+    - update

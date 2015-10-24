@@ -1,0 +1,17 @@
+---
+- name: copy varnish template
+  sudo: yes
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items: varnish_templates
+  when: varnish_templates is defined
+
+- name: copy system post template
+  sudo: yes
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items: _varnish_post_templates
+  notify:
+    restart varnish

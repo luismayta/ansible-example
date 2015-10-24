@@ -1,0 +1,12 @@
+# supervisord_http_user: "admin"
+# supervisord_http_pass: "15da140b7c38b2d02f96bc6da1f29416"
+
+# postgresql_users:
+#   - name: "postgres"
+#     pass: "445aa18cae30d59368241214cac8e314"
+#     host: "*"
+#     encrypted: no
+#   - name: "favorshare"
+#     pass: "fa25fe3ea5bd74ee2876a6a0af7f5114"
+#     host: "*"
+#     encrypted: no

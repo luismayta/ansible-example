@@ -1,0 +1,14 @@
+[program:uwsgi]
+
+command={{ app_dir_home }}/uwsgi.sh
+user={{ user }}
+
+priority=999
+stderr_logfile={{ dir_logs_supervisor }}/%(program_name)s.err.log
+stdout_logfile={{ dir_logs_supervisor }}/%(program_name)s.out.log
+
+numprocs=1
+autostart=true
+autorestart=true
+startsecs=10
+stopsignal=INT

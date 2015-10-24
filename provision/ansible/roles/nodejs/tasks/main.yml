@@ -1,0 +1,22 @@
+---
+
+- name: See repo nodejs was cloned
+  stat:
+    path: "/var/tmp/node-v0.12.7-linux-x64.tar.gz"
+  register: file_node_exist
+
+- name: Download NodeJS
+  sudo_user: "{{ user }}"
+  shell: "wget https://nodejs.org/dist/v0.12.7/node-v0.12.7-linux-x64.tar.gz"
+  args:
+    chdir: "/var/tmp"
+  register: download_nodejs
+  when: file_node_exist.stat.exists == False
+
+- name: Copy Bin nodejs
+  sudo: yes
+  shell: "tar -C /usr/local --strip-components 1 -xzf node-v0.12.7-linux-x64.tar.gz"
+  args:
+    chdir: "/var/tmp"
+  register: copy_bin_nodejs
+  when: download_nodejs|success

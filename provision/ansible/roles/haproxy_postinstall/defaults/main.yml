@@ -1,0 +1,11 @@
+---
+# vars file for haproxy
+
+haproxy_maxconn: 2000
+haproxy_timeout: 30s
+
+haproxy_templates:
+  - src: "haproxy.j2"
+    dest: "/etc/default/haproxy"
+  - src: "haproxy.cfg.j2"
+    dest: "/etc/haproxy/haproxy.cfg"

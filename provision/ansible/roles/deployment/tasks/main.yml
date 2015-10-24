@@ -1,0 +1,15 @@
+---
+
+- include: files.yml
+
+- include: apps.yml
+
+- include: virtualenvs.yml
+
+- include: script_templates.yml
+
+- include: migrations.yml
+
+- include: crontab.yml
+
+- include: statics.yml

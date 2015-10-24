@@ -1,0 +1,48 @@
+---
+
+haproxy:
+  defaults:
+    log: global
+    mode: http
+    auth: admin
+    password: godevel0per
+    refresh: 5s
+    timeout:
+      connect: 5000
+      client: 50000
+      server: 50000
+
+
+haproxy_backends:
+  - name: web
+    acl:
+      - type: url_beg
+        value: /
+    default_backend: True
+    mode: http
+    options:
+      - httplog
+    balance: roundrobin
+    servers: "{{ groups['webservers'] }}"
+    check_time: 60s
+    rise: 5
+    fall: 2
+    port: 80
+
+
+haproxy_frontend_http:
+  bind: ":80"
+
+
+haproxy_listens:
+  - name: postgresql
+    mode: "tcp"
+    options:
+      - pgsql-check user ha
+      - tcplog
+    ip: "{{ ansible_eth1['ipv4']['address'] }}"
+    bind: ":5432"
+    port: 5432
+    balance: source
+    servers: "{{ groups['dbservers'] }}"
+    check: check

@@ -1,0 +1,17 @@
+---
+
+galaxy_info:
+  author: Luis Mayta
+  description: Installs minimal Python 2.7.9 + Setuptools + PIP (from source) on Debian
+  company:
+  license: license (Mit)
+  min_ansible_version: 1.7
+  platforms:
+  - name: EL
+    versions:
+    - 6
+  categories:
+  - development
+  - web
+
+dependencies: []

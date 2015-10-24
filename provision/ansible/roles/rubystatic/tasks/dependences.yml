@@ -1,0 +1,8 @@
+---
+
+- name: Install Dependences
+  sudo: yes
+  apt: pkg="{{ item }}" state=latest
+  with_items:
+    - ruby-sass
+    - ruby-compass

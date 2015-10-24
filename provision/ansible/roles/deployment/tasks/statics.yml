@@ -1,0 +1,34 @@
+---
+
+- shell: which gulp
+  args:
+    chdir: "{{ apps_path }}"
+  register: gulp_command
+  ignore_errors: True
+
+- name: Run Gulp
+  sudo_user: "{{ user }}"
+  shell: >
+    gulp dist
+  args:
+    chdir: "{{ apps_path }}"
+  register: run_gulp
+  when: "environment != 'production'"
+  when: gulp_command|success
+  when: exist_gulpfile.stat.exists == True
+  tags:
+    - static
+    - apps
+    - update
+
+- name: Collect static files
+  sudo_user: "{{ user }}"
+  raw: "source {{ virtualenv_file_activate }} &&
+        source {{ virtualenv_file_postactivate }} &&
+        cd {{ app_dir }} &&
+       python manage.py collectstatic --noinput"
+  tags:
+    - static
+    - collect
+    - apps
+  register: collect_static_files

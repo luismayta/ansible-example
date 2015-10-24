@@ -1,0 +1,14 @@
+---
+- name: Ensure dependencies are installed
+  sudo: yes
+  apt: name="{{ item }}" state=present
+  with_items: _varnish_dependences
+  register: dependences_varnish
+
+- name: copy template
+  sudo: yes
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items: _varnish_pre_templates
+  when: _varnish_pre_templates is defined

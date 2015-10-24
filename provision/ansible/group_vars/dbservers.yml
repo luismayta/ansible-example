@@ -1,0 +1,38 @@
+---
+
+common_package_dependencies:
+  - "curl"
+  - "zip"
+  - "rsync"
+  - "wget"
+  - "openssl"
+  - "libssl-dev"
+  - "libpq-dev"
+  - "bzip2"
+
+common_dependencies:
+  - name: "python2.7-dev"
+    version: ""
+  - name: "python-dev"
+    version: ""
+  - name: "python-pip"
+  - name: "libpq-dev"
+  - name: "git"
+  - name: "python-setuptools"
+  - name: "python-software-properties"
+
+# PostgreSQL
+postgresql_version: 9.4
+postgresql_listen_addresses:
+  - '*'
+
+postgresql_databases:
+  - name: '{{ app_db_name }}'
+    port: '5432'
+
+postgresql_users:
+  - db: '{{ app_db_name }}'
+    name: 'luis'
+    password: 'luis'
+    priv: ALL
+    role_attr_flags: SUPERUSER

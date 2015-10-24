@@ -1,0 +1,11 @@
+---
+
+- name: Check if setuptools is already installed
+  stat: path=/usr/local/bin/easy_install-2.7
+  register: setuptools
+
+- name: Install Setuptools
+  command: /usr/local/bin/python2.7 setup.py install chdir={{ item.path }}
+  with_items: _setuptools_execute
+  register: install_setuptools
+  when: not setuptools.stat.exists

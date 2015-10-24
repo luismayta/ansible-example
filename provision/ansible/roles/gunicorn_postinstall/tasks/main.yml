@@ -1,0 +1,8 @@
+---
+
+- name: copy templates gunicorn
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0755
+  with_items: gunicorn.templates

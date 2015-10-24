@@ -1,0 +1,10 @@
+---
+
+- name: Install pip
+  sudo: yes
+  apt: name=python-pip state=latest
+
+- name: install package pip
+  sudo: yes
+  pip: name="{{ item.name }}" state="{{ item.state }}"
+  with_items: _python_pip_packages

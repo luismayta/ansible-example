@@ -1,0 +1,13 @@
+---
+
+- name: update apt
+  sudo: yes
+  apt: update_cache=yes
+
+- name: restart varnish
+  sudo: yes
+  service: name=varnish state=restarted
+
+- name: reload varnish
+  sudo: yes
+  service: name=varnish state=reloaded

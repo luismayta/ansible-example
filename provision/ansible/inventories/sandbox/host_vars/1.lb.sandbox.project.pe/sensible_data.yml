@@ -1,0 +1,2 @@
+supervisord_http_user: "admin"
+supervisord_http_pass: "5ebcd11625ba52f4f9fc70410f59b992"

@@ -1,0 +1,12 @@
+---
+
+
+- include: host.yml
+
+- include: files.yml
+
+- include: dependences.yml
+
+- include: pip.yml
+
+- include: environment.yml

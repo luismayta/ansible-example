@@ -1,0 +1,87 @@
+[uwsgi]
+log-format = %(addr) - %(user) [%(ltime)] "%(method) %(uri) %(proto)" %(status) %(size) %(pid) %(msecs) "%(referer)" "%(uagent)"
+
+{% if uwsgi.project is defined %}
+project={{ uwsgi.project }}
+{% endif %}
+{% if uwsgi.base is defined %}
+base={{ uwsgi.base }}
+{% endif %}
+{% if uwsgi.home is defined %}
+home={{ uwsgi.home }}
+{% endif %}
+{% if uwsgi.socket is defined %}
+socket={{ uwsgi.socket }}
+{% endif %}
+{% if uwsgi.uid is defined %}
+uid={{ uwsgi.uid}}
+{% endif %}
+{% if uwsgi.gid is defined %}
+gid={{ uwsgi.gid }}
+{% endif %}
+{% if uwsgi.virtualenv is defined %}
+virtualenv={{ uwsgi.virtualenv }}
+{% endif %}
+{% if uwsgi.pythonpath is defined %}
+pythonpath={{ uwsgi.pythonpath }}
+{% endif %}
+{% if uwsgi.chdir is defined %}
+chdir={{ uwsgi.chdir }}
+{% endif %}
+{% if uwsgi.module is defined %}
+module={{ uwsgi.module }}
+{% endif %}
+{% if uwsgi.master is defined %}
+master={{ uwsgi.master }}
+{% endif %}
+{% if uwsgi.vacuum is defined %}
+vacuum={{ uwsgi.vacuum }}
+{% endif %}
+{% if uwsgi.max_requests is defined %}
+max-requests={{ uwsgi.max_requests }}
+{% endif %}
+{% if uwsgi.processes is defined %}
+processes={{ uwsgi.processes }}
+{% endif %}
+{% if uwsgi.threads is defined %}
+threads={{ uwsgi.threads }}
+{% endif %}
+{% if uwsgi.enable_threads is defined %}
+enable-threads={{ uwsgi.enable_threads }}
+{% endif %}
+{% if uwsgi.http is defined %}
+http={{ uwsgi.http }}
+{% endif %}
+{% if uwsgi.pidfile is defined %}
+pidfile={{ uwsgi.pidfile }}
+{% endif %}
+{% if uwsgi.touch_reload is defined %}
+touch-reload={{ uwsgi.touch_reload }}
+{% endif %}
+{% if uwsgi.daemonize is defined %}
+daemonize={{ uwsgi.daemonize }}
+{% endif %}
+{% if uwsgi.harakiri is defined %}
+harakiri={{ uwsgi.harakiri }}
+{% endif %}
+{% if uwsgi.harakiri_verbose is defined %}
+harakiri-verbose={{ uwsgi.harakiri_verbose }}
+{% endif %}
+{% if uwsgi.log_x_forwarded_for is defined %}
+log-x-forwarded-for={{ uwsgi.log_x_forwarded_for }}
+{% endif %}
+{% if uwsgi.stats is defined %}
+stats={{ uwsgi.stats }}
+{% endif %}
+{% if uwsgi.log_5xx is defined %}
+log-5xx={{ uwsgi.log_5xx }}
+{% endif %}
+{% if uwsgi.log_slow is defined %}
+log-slow={{ uwsgi.log_slow }}
+{% endif %}
+{% if uwsgi.shared_socket is defined %}
+shared-socket={{ uwsgi.shared_socket }}
+{% endif %}
+{% if uwsgi.buffer_size is defined %}
+buffer-size={{ uwsgi.buffer_size }}
+{% endif %}

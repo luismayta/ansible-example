@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Django settings
+export SECRET_KEY='{{ app.vars.key.secret }}'
+
+export DB_URL='{{ app.vars.url.postgresql }}'
+# Media url
+export MEDIA_URL='{{ app.vars.url.media }}'
+# Static url
+export STATIC_URL='{{ app.vars.url.static }}'

@@ -1,0 +1,22 @@
+1.lb.sandbox.project.pe ansible_ssh_host=192.168.40.80 ansible_ssh_port=22
+1.web.sandbox.project.pe ansible_ssh_host=192.168.40.81 ansible_ssh_port=22
+2.web.sandbox.project.pe ansible_ssh_host=192.168.40.82 ansible_ssh_port=22
+1.db.master.sandbox.project.pe ansible_ssh_host=192.168.40.90 ansible_ssh_port=22
+
+# Groups
+
+[webservers]
+[1:2].web.sandbox.project.pe
+
+[lbservers]
+1.lb.sandbox.project.pe
+
+[dbservers:children]
+dbservers.masters
+dbservers.slaves
+
+[dbservers.masters]
+1.db.master.sandbox.project.pe
+
+[dbservers.slaves]
+#nothing

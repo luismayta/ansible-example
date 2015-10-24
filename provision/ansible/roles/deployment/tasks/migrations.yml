@@ -1,0 +1,36 @@
+---
+
+- name: make migrations
+  sudo_user: "{{ user }}"
+  raw: "source {{ virtualenv_file_activate }} &&
+        source {{ virtualenv_file_postactivate }} &&
+        cd {{ app_dir }} &&
+        python manage.py makemigrations"
+  register: make_migrations
+  tags:
+    - syncdb
+    - apps
+
+- name: Sync database
+  sudo_user: "{{ user }}"
+  raw: "source {{ virtualenv_file_activate }} &&
+        source {{ virtualenv_file_postactivate }} &&
+        cd {{ app_dir }} &&
+        python manage.py syncdb --noinput"
+  register: sync_database
+  when: make_migrations|success
+  tags:
+    - syncdb
+    - apps
+
+- name: Migrate database
+  sudo_user: "{{ user }}"
+  raw: "source {{ virtualenv_file_activate }} &&
+        source {{ virtualenv_file_postactivate }} &&
+        cd {{ app_dir }} &&
+        python manage.py migrate"
+  register: migrate_database
+  when: sync_database|success
+  tags:
+    - syncdb
+    - apps

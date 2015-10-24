@@ -1,0 +1,6 @@
+---
+
+- include: common.yml
+- include: python.yml
+- include: setuptools.yml
+- include: pip.yml

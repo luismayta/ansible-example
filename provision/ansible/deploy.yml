@@ -1,0 +1,33 @@
+---
+
+- name: Deploy Application
+  hosts: webservers
+  roles:
+    - common
+    - { role: rubystatic, when: "user == 'vagrant'" }
+    - deployment
+    - nginx_postinstall
+    - uwsgi_postinstall
+    - supervisor_postinstall
+  tags:
+    - webserver
+    - wait
+    - deployment
+
+- name: Common PostInstall
+  hosts: webservers
+  roles:
+    - common_postinstall
+  tags:
+    - webserver
+    - wait
+    - deployment
+
+- name: configure haproxy PostInstall
+  hosts: lbservers
+  roles:
+    - haproxy_postinstall
+  tags:
+    - lbserver
+    - wait
+    - deployment

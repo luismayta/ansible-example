@@ -1,0 +1,72 @@
+---
+# vars file for python
+
+python_version: 2.7.9
+python_setuptools_version: 5.7
+
+# Variables Private
+
+_file_bin_python: "/usr/local/bin/python2.7"
+_python_dependences:
+  - build-essential
+  - libffi-dev
+  - libncursesw5-dev
+  - libssl-dev
+  - libgdbm-dev
+  - libc6-dev
+  - libsqlite3-dev
+  - tk-dev
+  - libbz2-dev
+  - python-dev
+  - python-pip
+
+_python_pip_packages:
+  - name: "pip"
+    state: "latest"
+  - name: "virtualenvwrapper"
+    state: "latest"
+
+_python_validation:
+  command: python -c 'import sys; print(sys.version)'
+
+_python_path_tmp: "/var/tmp"
+_python_path_version: "{{ _python_path_tmp }}/Python-{{ python_version }}"
+_setuptools_path_version: "{{ _python_path_tmp }}/setuptools-{{ python_setuptools_version }}"
+
+_python_downloads:
+  - url: "https://www.python.org/ftp/python/{{ python_version }}/Python-{{ python_version }}.tgz"
+    dest: "{{ _python_path_version }}.tgz"
+  - url: "https://pypi.python.org/packages/source/s/setuptools/setuptools-{{ python_setuptools_version }}.tar.gz"
+    dest: "{{ _setuptools_path_version }}.tar.gz"
+
+_python_unpacks:
+  - file: "{{ _python_path_version }}.tgz"
+    dest: "{{ _python_path_tmp }}"
+    copy: no
+  - file: "{{ _setuptools_path_version }}.tar.gz"
+    dest: "{{ _python_path_tmp }}"
+    copy: no
+
+_python_executes:
+  - ./configure --prefix=/usr/local --enable-unicode=ucs4 --enable-shared LDFLAGS='-Wl,-rpath /usr/local/lib'
+  - make
+  - make altinstall
+
+_python_create_links:
+  - src: "/usr/local/bin/python2.7"
+    dest: "/usr/local/bin/python"
+    state: link
+
+_python_configure_command:
+    update_shell: "source ~/.bashrc"
+
+# Setup Tools config
+
+_setuptools_execute:
+  - command: /usr/local/bin/python2.7 setup.py install
+    path: "{{ _setuptools_path_version }}"
+
+# Common Dependences
+_python_create_path_dependences:
+  - path: "{{ _python_path_tmp }}"
+    state: "directory"

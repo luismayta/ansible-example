@@ -1,0 +1,15 @@
+#!/bin/bash
+# -*- coding: utf-8 -*-
+
+DEPLOY_SOURCE_DIR={{ app.dir.static_files }}/
+
+DEPLOY_DEST_DIR={{ static_files_source }}
+
+DEPLOY_SERVER={{ ip }}
+DEPLOY_ACCOUNT={{ user }}
+
+# access by tediously typing a password over and again
+echo $(date)
+echo 'Progress'
+rsync --chmod=ug=rwX -e ssh -axv \
+      $DEPLOY_SOURCE_DIR $DEPLOY_ACCOUNT@$DEPLOY_SERVER:$DEPLOY_DEST_DIR --progress

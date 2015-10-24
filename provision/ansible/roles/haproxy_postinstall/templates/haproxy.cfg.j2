@@ -1,0 +1,106 @@
+global 
+    log 127.0.0.1 local0 notice 
+    maxconn {{ haproxy_maxconn }}
+    chroot /var/lib/haproxy
+    stats socket /run/haproxy/admin.sock mode 660 level admin
+    stats timeout {{ haproxy_timeout }}
+    user haproxy
+    group haproxy
+    daemon
+
+    # Default SSL material locations
+    ca-base /etc/ssl/certs
+    crt-base /etc/ssl/private
+
+    # Default ciphers to use on SSL-enabled listening sockets.
+    # For more information, see ciphers(1SSL).
+    ssl-default-bind-ciphers kEECDH+aRSA+AES:kRSA+AES:+AES256:RC4-SHA:!kEDH:!LOW:!EXP:!MD5:!aNULL:!eNULL
+
+defaults
+    log {{ haproxy.defaults.log }} 
+    mode {{ haproxy.defaults.mode }}
+    option dontlognull 
+    timeout connect {{ haproxy.defaults.timeout.connect }}
+    timeout client  {{ haproxy.defaults.timeout.client }}
+    timeout server  {{ haproxy.defaults.timeout.server }}
+    errorfile 400 /etc/haproxy/errors/400.http
+    errorfile 403 /etc/haproxy/errors/403.http
+    errorfile 408 /etc/haproxy/errors/408.http
+    errorfile 500 /etc/haproxy/errors/500.http
+    errorfile 502 /etc/haproxy/errors/502.http
+    errorfile 503 /etc/haproxy/errors/503.http
+    errorfile 504 /etc/haproxy/errors/504.http
+
+
+frontend http
+    bind *:{{ port_http }}
+    {% if name_domain is defined %}
+    acl correctdomain hdr(host)	{{ name_domain }}
+    {% endif %}
+    {% for node in haproxy_backends %}  
+        {% for acl in node.acl %}  
+    acl {{ node.name }}  {{ acl.type }} {{ acl.value }}
+        {% endfor %}
+    {% endfor %}
+    {% if name_domain is defined %}
+        # redirect location http://{{ name_domain }} if !correctdomain
+    {% endif %}
+    {% for node in haproxy_backends %}  
+    use_backend {{ node.name }} if {{ node.name }}
+    {% if node.default_backend is defined %}
+    default_backend {{ node.name }} # lets let the static servers handle 404s and junk
+    {% endif %}
+    {% endfor %}
+
+
+{% if haproxy_listens is defined %}
+{% for node in haproxy_listens %}  
+listen {{ node.name }} {{ node.ip }}{{ node.bind }}
+    mode {{ node.mode }}
+    {% for option in node.options %}
+    option {{ option }}
+    {% endfor %}
+    balance {{ node.balance }}
+{% for server in node.servers %}  
+    server {{ hostvars[server]['inventory_hostname'] }} {{ hostvars[server]['ansible_ssh_host'] }}:{{ node.port }} {{ node.check }} 
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+
+{% if haproxy_frontends is defined %}
+{% for node in haproxy_frontends %}  
+frontend {{ node.name }}
+    mode {{ node.mode }}
+    bind {{ node.bind }}
+    balance {{ node.balance }}
+{% for option in node.options %}
+    option {{ option }}
+{% endfor %}
+{% for server in node.servers %}  
+    server {{ hostvars[server]['inventory_hostname'] }} {{ hostvars[server]['ansible_ssh_host'] }}:{{ node.port }} {{ node.check }} 
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+
+{% if haproxy_backends is defined %}
+{% for node in haproxy_backends %}  
+backend {{ node.name }}
+    mode {{ node.mode }}
+    balance {{ node.balance }}
+{% for option in node.options %}
+    option {{ option }}
+{% endfor %}
+{% for backend in node.servers %}  
+  server {{ hostvars[backend]['inventory_hostname'] }} {{ hostvars[backend]['ansible_ssh_host'] }}:{{ node.port }} check inter {{ node.check_time }} rise {{ node.rise }} fall {{ node.fall }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+
+listen stats *:1936
+    stats enable
+    stats uri /
+    stats hide-version
+    stats auth {{ haproxy.defaults.auth }}:{{ haproxy.defaults.password }}

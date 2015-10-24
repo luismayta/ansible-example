@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo "Starting uwsgi"
+
+source {{ virtualenv_file_activate }} && source {{ virtualenv_file_postactivate }}
+cd {{ app_dir }}
+
+exec uwsgi --ini {{ app_dir_home }}/{{ app_name }}.ini

@@ -1,0 +1,32 @@
+---
+
+- name: Update package repositories
+  apt:
+    update_cache: True
+  tags:
+    - apt
+    - update_cache
+
+- name: Install common package dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  register: install_common_package_dependencies
+  when: common_package_dependencies is defined
+  with_items: common_package_dependencies
+  tags:
+    - apt
+    - dependencies
+- debug: var=install_common_package_dependencies.stdout_lines
+
+- name: Install common dependencies
+  apt:
+    name: "{{ item.name }}"
+    state: present
+  register: install_common_dependencies
+  when: common_dependencies is defined
+  with_items: common_dependencies
+  tags:
+    - apt
+    - dependencies
+- debug: var=install_common_dependencies.stdout_lines

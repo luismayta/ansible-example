@@ -1,0 +1,13 @@
+---
+# vars file for gunicorn
+
+gunicorn:
+  templates:
+    - src: "gunicorn.conf.py"
+      dest: "{{ app.dir.home }}"
+    - src: "gunicorn.sh"
+      dest: "{{ app.dir.home }}"
+  bind: 0.0.0.0:9000
+  dir:
+    logs: '/var/logs/'
+  max_requests: 1000

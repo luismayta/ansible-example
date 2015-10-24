@@ -1,0 +1,9 @@
+---
+
+- name: Create a new database
+  sudo: yes
+  sudo_user: postgres
+  postgresql_db:
+    name: "{{ item.name }}"
+    port: "{{ item.port }}"
+  with_items:  postgresql_databases

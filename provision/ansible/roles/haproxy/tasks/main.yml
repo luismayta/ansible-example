@@ -1,0 +1,5 @@
+---
+
+- include: common.yml
+- include: configure.yml
+- include: install.yml

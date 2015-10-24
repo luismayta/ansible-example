@@ -1,0 +1,37 @@
+upstream {{ app_name }} {
+    server 127.0.0.1:9000; # for a web port socket (we'll use this first)
+}
+
+server {
+    listen {{ nginx.port }};
+    server_name {{ nginx.server_name }};
+
+    location /favicon.ico {
+        alias /var/www/favicon.ico;
+    }
+
+    location /static/ {
+        alias {{ app.dir.static }}/;
+    }
+
+    location /media/ {
+        alias {{ app.dir.media }}/;
+    }
+
+    location / {
+
+        include         uwsgi_params;
+        uwsgi_pass      {{ app_name }};
+        #uwsgi_pass unix://var/run/uwsgi/flaskapp.sock;
+        add_header P3P 'CP="ALL DSP COR PSAa PSDa OUR NOR ONL UNI COM NAV"';
+        # proxy_set_header Host $http_host;
+        # proxy_set_header X-Real-IP $remote_addr;
+        # proxy_set_header X-Scheme $scheme;
+        # proxy_pass {{ nginx.proxy_pass}};
+        # proxy_next_upstream error;
+
+    }
+
+    access_log /var/log/nginx/{{ app.name }}.access_log;
+    error_log /var/log/nginx/{{ app.name }}.error_log;
+}
