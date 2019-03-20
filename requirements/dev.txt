@@ -1,3 +1,3 @@
 -r test.txt
 grip
-ipdb==0.11
+ipdb==0.12
