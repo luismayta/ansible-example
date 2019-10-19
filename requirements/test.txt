@@ -1,2 +1,0 @@
--r ../requirements.txt
-ansible==2.6.3
