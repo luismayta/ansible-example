@@ -1,39 +1,49 @@
+
+# EditorConfig is awesome: http://EditorConfig.org
+
+
+# top-most EditorConfig file
 root = true
 
+# Unix-style newlines with a newline ending every file
 [*]
-indent_style = space
 end_of_line = lf
-insert_final_newline = true
-trim_trailing_whitespace = true
+insert_final_newline = false
+indent_style = space
+# Set default charset
 charset = utf-8
 trim_trailing_whitespace = true
+
+[*.{el}]
 insert_final_newline = false
 
-# Tab indentation (no size specified)
-[*.{el,md,coffee,pp,yml,js,j2,vcl,go}]
+[*.{el,md,yml,yaml,js,json,toml}]
 indent_style = space
 indent_size = 2
 
+# 4 space indentation
 [*.{py,sh}]
 indent_style = space
 indent_size = 4
 
-# Tabs in less
-[*.less]
-indent_style = tab
-indent_size = 2
+# Minified JavaScript files shouldn't be changed
+[**.min.js]
+indent_style = ignore
+insert_final_newline = ignore
 
-[*.css]
-indent_style = tab
-indent_size = 2
-
+# Tab indentation (no size specified)
 [Makefile]
 indent_style = tab
 
-[Vagrantfile]
-indent_style = tab
-indent_size = 2
-
-[*.html]
+# Indentation override for all JS under lib directory
+[*.{el,js,json,md,yml,yaml}]
 indent_style = space
 indent_size = 2
+
+[*.{make,mk}]
+indent_style = tab
+indent_size  = 4
+
+# Batch files use tabs for indentation
+[*.bat]
+indent_style = tab

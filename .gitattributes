@@ -1,4 +1,5 @@
 # Path-based git attributes
+
 # https://www.kernel.org/pub/software/scm/git/docs/gitattributes.html
 
 ## Test/documentation
@@ -8,8 +9,10 @@
 /.githooks          export-ignore
 /.gitignore         export-ignore
 /.travis.yml        export-ignore
+/.travis.yaml       export-ignore
 /phpunit.xml.dist   export-ignore
 /.scrutinizer.yml   export-ignore
+/.scrutinizer.yaml  export-ignore
 /tests              export-ignore
 
 ## Merging
@@ -60,9 +63,13 @@ CHANGELOG.md merge=union
 *.tmpl text eol=lf
 *.phtml text eol=lf
 
+*.wadl text eol=lf
+*.wsdl text eol=lf
+
 # App config
 .env text eol=lf
 .env.example text eol=lf
+.env.sample  text eol=lf
 
 # Server config
 .htaccess text eol=lf
@@ -79,7 +86,8 @@ CHANGELOG.md merge=union
 
 # Misc config
 *.yaml text eol=lf
-*.yml text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
 .editorconfig text eol=lf
 
 # Build config
@@ -129,3 +137,13 @@ bin/* text eol=lf
 *.pyc       binary
 *.pdf       binary
 *.bz2       binary
+*.sh linguist-language=go
+*.webm      binary
+*.class     binary
+*.dll       binary
+*.ear       binary
+*.jar       binary
+*.so        binary
+*.war       binary
+*.xls       binary
+*.xlsx       binary
