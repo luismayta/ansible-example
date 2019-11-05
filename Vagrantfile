@@ -1,24 +1,33 @@
 # -*- mode: ruby -*-
-# # vi: set ft=ruby :
+# vi: set ft=ruby :
 
 # Specify minimum Vagrant version and Vagrant API version
 Vagrant.require_version ">= 1.6.0"
 VAGRANTFILE_API_VERSION = "2"
 
+require 'getoptlong'
+
 # Require YAML module
 require 'yaml'
 
+environment = ENV['ENVIRONMENT']
+path_file_os = "provision/ruby/os.rb"
+load path_file_os if File.exist?(path_file_os)
+
+if environment.nil? || environment == ''
+		environment = 'dev'
+end
+
 # Read YAML file with box details
-servers = YAML.load_file('servers.yml')
+settings = YAML.load_file("provision/servers/#{environment}.yaml")
 
 # Create boxes
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  # Iterate through entries in YAML file
-  servers.each do |servers|
-    config.vm.define servers["name"] do |srv|
-      srv.vm.box = servers["box"]
-      srv.vm.box_url = servers["url"]
+	settings['servers'].each do |servers|
+		config.vm.define servers["name"] do |srv|
+			srv.vm.box = servers["box"]
+			srv.vm.box_url = servers["url"]
 
 			srv.ssh.insert_key = false
 			srv.ssh.forward_agent = true
@@ -53,5 +62,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
 	end
-
 end
+
+load "Vagrantfile.local" if File.exist?("Vagrantfile.local")
