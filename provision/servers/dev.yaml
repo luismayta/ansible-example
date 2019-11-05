@@ -1,0 +1,16 @@
+---
+
+name_project: Ansible Example
+environment: dev
+
+vagrant:
+  limit: ''
+  verbose: 'vvvv'
+  sudo: true
+
+servers:
+  - name: 1.web.ansible-example.vm
+    ip: 10.10.10.20
+    box: ubuntu/xenial64
+    hostname: 1-web-ansible-example.vm
+    ram: 6144
