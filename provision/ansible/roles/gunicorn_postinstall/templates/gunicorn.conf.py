@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import multiprocessing
 
 logfile = "{{ gunicorn.dir.logs }}/gunicorn.log"
